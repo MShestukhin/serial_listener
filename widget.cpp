@@ -25,6 +25,7 @@ Widget::Widget(QWidget *parent) :
     ui->ParityBox->addItem(QLatin1String("Mark"), QSerialPort::MarkParity);
     ui->ParityBox->addItem(QLatin1String("Space"), QSerialPort::SpaceParity);
     ui->PortNameBox->clear();
+    //add timer for update /dev/tty*
     QTimer* tmr=new QTimer;
     tmr->start(1000);
     connect(tmr, &QTimer::timeout, [=](){
@@ -89,14 +90,6 @@ void Widget::on_pushButton_clicked()
         serialport->setDataBits((QSerialPort::DataBits) ui->DataBitsBox->currentText().toInt());
         serialport->setParity((QSerialPort::Parity) ui->ParityBox->currentText().toInt());
         if(serialport->open(QIODevice::ReadWrite)){
-            QByteArray ba;
-            QDataStream stream(&ba, QIODevice::WriteOnly);
-            int pref=0x40;
-            float x=1.2;
-            float y=2.3;
-            float z=3.3;
-            stream<<pref<<x<<y<<z;
-            serialport->write(ba,ba.size());
             ui->textEdit->append(serialport->portName()+">>Open...");
             ui->ButtonConnect->setText("Disconnect");
         }
