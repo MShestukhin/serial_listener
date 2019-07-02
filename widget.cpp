@@ -26,7 +26,7 @@ Widget::Widget(QWidget *parent) :
     ui->ParityBox->addItem(QLatin1String("Space"), QSerialPort::SpaceParity);
     ui->PortNameBox->clear();
     //add timer for update /dev/tty*
-    QTimer* tmr=new QTimer;
+    tmr=new QTimer;
     tmr->start(1000);
     connect(tmr, &QTimer::timeout, [=](){
         ui->PortNameBox->clear();
@@ -74,6 +74,7 @@ Widget::~Widget()
 {
     delete ui;
     delete serialport;
+    delete tmr;
 }
 
 void Widget::on_pushButton_clicked()

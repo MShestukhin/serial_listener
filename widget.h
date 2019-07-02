@@ -24,6 +24,7 @@ private slots:
 private:
     Ui::Widget *ui;
     QSerialPort *serialport;
+    QTimer* tmr;
 };
 
 #endif // WIDGET_H
