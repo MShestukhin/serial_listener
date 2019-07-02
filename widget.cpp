@@ -59,7 +59,6 @@ Widget::Widget(QWidget *parent) :
             ui->ButtonConnect->setText("Connect");
         }
     });
-    QObject::connect(ui->ButtonConnect,SIGNAL(clicked(bool)),this,SLOT(on_pushButton_clicked()));
     QObject::connect(serialport,&QSerialPort::readyRead, [=](){
         QByteArray ba;
         ba.append(serialport->readAll());
@@ -86,7 +85,7 @@ Widget::~Widget()
     delete tmr;
 }
 
-void Widget::on_pushButton_clicked()
+void Widget::on_ButtonConnect_clicked()
 {
     if(serialport->isOpen()){
         serialport->flush();
