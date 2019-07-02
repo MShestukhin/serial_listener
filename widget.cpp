@@ -101,15 +101,7 @@ void Widget::on_pushButton_clicked()
         serialport->setParity((QSerialPort::Parity) ui->ParityBox->currentText().toInt());
         serialport->setStopBits((QSerialPort::StopBits) ui->StopBitsBox->currentText().toInt());
         serialport->setFlowControl((QSerialPort::FlowControl) ui->FlowControlBox->currentText().toInt());
-        if(serialport->open(QIODevice::ReadWrite)){
-            QByteArray ba;
-            QDataStream stream(&ba, QIODevice::WriteOnly);
-            int pref=0x40;
-            float x=1.2;
-            float y=2.3;
-            float z=3.3;
-            stream<<pref<<x<<y<<z;
-            serialport->write(ba,ba.size());
+        if(serialport->open(QIODevice::ReadOnly)){
             ui->textEdit->append(serialport->portName()+">>Open...");
             ui->ButtonConnect->setText("Disconnect");
         }
