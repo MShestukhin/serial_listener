@@ -24,7 +24,16 @@ Widget::Widget(QWidget *parent) :
     ui->ParityBox->addItem(QLatin1String("Odd"), QSerialPort::OddParity);
     ui->ParityBox->addItem(QLatin1String("Mark"), QSerialPort::MarkParity);
     ui->ParityBox->addItem(QLatin1String("Space"), QSerialPort::SpaceParity);
-    ui->PortNameBox->clear();
+    // fill stop bits
+     ui->StopBitsBox->addItem(QLatin1String("1"), QSerialPort::OneStop);
+     #ifdef Q_OS_WIN
+     ui->StopBitsBox->addItem(QLatin1String("1.5"), QSerialPort::OneAndHalfStop);
+     #endif
+     ui->StopBitsBox->addItem(QLatin1String("2"), QSerialPort::TwoStop);
+    // fill flow control
+     ui->FlowControlBox->addItem(QLatin1String("None"), QSerialPort::NoFlowControl);
+     ui->FlowControlBox->addItem(QLatin1String("RTS/CTS"), QSerialPort::HardwareControl);
+     ui->FlowControlBox->addItem(QLatin1String("XON/XOFF"), QSerialPort::SoftwareControl);
     //add timer for update /dev/tty*
     tmr=new QTimer;
     tmr->start(1000);
@@ -90,7 +99,17 @@ void Widget::on_pushButton_clicked()
         serialport->setBaudRate((QSerialPort::BaudRate) ui->BaudRateBox->currentText().toInt());
         serialport->setDataBits((QSerialPort::DataBits) ui->DataBitsBox->currentText().toInt());
         serialport->setParity((QSerialPort::Parity) ui->ParityBox->currentText().toInt());
+        serialport->setStopBits((QSerialPort::StopBits) ui->StopBitsBox->currentText().toInt());
+        serialport->setFlowControl((QSerialPort::FlowControl) ui->FlowControlBox->currentText().toInt());
         if(serialport->open(QIODevice::ReadWrite)){
+            QByteArray ba;
+            QDataStream stream(&ba, QIODevice::WriteOnly);
+            int pref=0x40;
+            float x=1.2;
+            float y=2.3;
+            float z=3.3;
+            stream<<pref<<x<<y<<z;
+            serialport->write(ba,ba.size());
             ui->textEdit->append(serialport->portName()+">>Open...");
             ui->ButtonConnect->setText("Disconnect");
         }
